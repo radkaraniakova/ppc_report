@@ -40,3 +40,28 @@ Písma (Google Fonts, OFL): Archivo Black, Fraunces, IBM Plex Mono.
   tvar hrebeňa je štylizovaný, pre presný profil použiť DEM.
 - Príbehové texty sú návrhy — prepíš ich svojím hlasom.
 - Ak má byť tlač „drahšia“: vypnúť okrovú a nechať tri farby.
+
+---
+
+# Séria 2 · „maľba“ (ilustrované cestovateľské plagáty)
+
+Štýl podľa referencií (Terchová, Slovenský rozhlas, Slovenský raj, Veľký Choč): ilustrácia cez
+celý formát, vzdušná perspektíva, dramatické svetlo, jemné zrno (speckle), malý centrovaný
+nadpis dole + podtitul, pečiatka vpravo dole (miesto pre tvoje logo).
+
+![Prehľad série 2](png/00-prehlad-seria2.png)
+
+| # | Návrh | Nálada / motív |
+|---|---|---|
+| 07 | **Stratenec** | hrdinský podhľad na tri betónové kríže, modrá obloha, zlaté lúky, smreky |
+| 08 | **Kopanice** | súmrak, ružové oblaky, drevenica so svietiacimi oknami, svetlá samôt na kopcoch, bežec s čelovkou |
+| 09 | **Bučina** | plošná trojfarebná (tyrkys · koral · tmavomodrá), chotárna cesta do lesa, rys, jeleň, papraď |
+| 10 | **Veľký Javorník** | more hmly, oblé hrebene do diaľky, čučoriedkové kríky, rázcestník a partia na vrchole |
+| 11 | **Noc na hrebeni** | hviezdy, mesiac, reťaz čeloviek po hrebeňoch — plagát pre tých, čo bežali v noci |
+| 12 | **Makyta** | jeseň, kopy sena na ostrvách, ovce, drevenica, žlto-hrdzavá bučina |
+
+Generátor: `python3 src/generate_malba.py` (zdieľa pomocné funkcie s `generate.py`).
+Písmo nadpisov: Jost (Google Fonts, OFL).
+
+**Poznámky:** Nadpis „Noc na hrebeni“ nesie parametre J100 (105 km · +4030 m), ale nie názov
+pretekov — ako edícia pretekov až po dohode s organizátorom. Pečiatka je zástupný symbol pre logo.

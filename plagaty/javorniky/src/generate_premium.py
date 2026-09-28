@@ -77,8 +77,10 @@ def p07():
     K.hill(p, m2, "#f0c24a", "#c98d22", depth=300, tex=["#f8d772", "#c48a25", "#e3a93a"], n=500, L=16, wid=2.6, op=.5,
            rim="#fff2c2", rim_w=2.5, seed=5)
     autumn = [("#9a4a1f", "#dc8a2f", "#f3c44e"), ("#7a3520", "#b8552a", "#e0873a"), ("#8a5a18", "#d7a23a", "#f6d56a")]
-    K.crowns(p, m2, 90, 700, autumn, 4.2, seed=51, span=(-20, 250))
-    K.crowns(p, m2, 90, 700, autumn, 4.2, seed=52, span=(740, 1020))
+    left = [(x, y) for x, y in m2 if x < 300]
+    right = [(x, y) for x, y in m2 if x > 700]
+    K.canopy(p, left, 90, autumn, 9, seed=51, clip_d=smooth_path(m2, H))
+    K.canopy(p, right, 90, autumn, 9, seed=52, clip_d=smooth_path(m2, H))
     p.add(K.tree_row(m2, 40, 200, 22, lambda x, y, r: K.spruce(x, y + r.uniform(40, 90), r.uniform(50, 80), NAVY, NAVY2, NAVY3, seed=int(x)), rnd))
     p.add(K.tree_row(m2, 780, 960, 22, lambda x, y, r: K.spruce(x, y + r.uniform(40, 90), r.uniform(50, 80), NAVY, NAVY2, NAVY3, seed=int(x)), rnd))
     # rozhľadňa v opare za krížmi
@@ -223,12 +225,12 @@ def lynx(x, y, s, body, dark, shade):
     out.append(f'<ellipse cx="{f(x)}" cy="{f(y - .8*s)}" rx="{f(.24*s)}" ry="{f(.34*s)}" fill="#fbf4e4"/>')
     # predné nohy a labky
     for sd in (-1, 1):
-        out.append(f'<path d="M{P(sd*.05,-.86)} L{P(sd*.05,-.02)} L{P(sd*.25,-.02)} L{P(sd*.24,-.86)}Z" fill="{body}"/>'
+        out.append(f'<path d="M{P(sd*.05,-.5)} L{P(sd*.05,-.02)} L{P(sd*.25,-.02)} L{P(sd*.24,-.55)}Z" fill="{body}"/>'
                    f'<ellipse cx="{f(x + sd*.15*s)}" cy="{f(y - .03*s)}" rx="{f(.14*s)}" ry="{f(.065*s)}" fill="{body}"/>'
                    + "".join(f'<path d="M{P(sd*.15 + k*.045, -.07)} v{f(.05*s)}" stroke="{dark}" stroke-width="{f(.012*s)}"/>' for k in (-1, 0, 1)))
     # hlava s golierom (bokombradami)
-    L = [(0, -1.8), (-.2, -1.78), (-.34, -1.68), (-.39, -1.52), (-.53, -1.28), (-.41, -1.31), (-.47, -1.14),
-         (-.31, -1.21), (-.27, -1.08), (-.13, -1.17), (0, -1.1)]
+    L = [(0, -1.8), (-.2, -1.78), (-.34, -1.68), (-.4, -1.52), (-.6, -1.26), (-.45, -1.3), (-.55, -1.1),
+         (-.35, -1.19), (-.33, -1.02), (-.16, -1.14), (0, -1.06)]
     pts = L + [(-u, v) for u, v in reversed(L[:-1])]
     out.append(f'<path d="M' + " L".join(P(u, v) for u, v in pts) + f'Z" fill="{body}"/>')
     out.append(f'<path d="M' + " L".join(P(u, v) for u, v in [(-.3, -1.38), (-.46, -1.26), (-.34, -1.27), (-.38, -1.16), (-.24, -1.22)]) + f'" stroke="{dark}" stroke-width="{f(.018*s)}" fill="none"/>')
@@ -236,11 +238,13 @@ def lynx(x, y, s, body, dark, shade):
     for sd in (-1, 1):  # uši so strapcami
         out.append(f'<path d="M{P(sd*.34,-1.66)} L{P(sd*.3,-2.02)} L{P(sd*.13,-1.76)}Z" fill="{body}"/>'
                    f'<path d="M{P(sd*.3,-1.72)} L{P(sd*.29,-1.94)} L{P(sd*.19,-1.77)}Z" fill="{dark}"/>'
-                   f'<path d="M{P(sd*.3,-2.02)} L{P(sd*.31,-2.18)}" stroke="{dark}" stroke-width="{f(.035*s)}" stroke-linecap="round"/>')
+                   f'<path d="M{P(sd*.3,-2.02)} Q{P(sd*.33,-2.14)} {P(sd*.28,-2.26)}" stroke="{dark}" stroke-width="{f(.04*s)}" fill="none" stroke-linecap="round"/>')
         # oko
         ex = sd * .14
-        out.append(f'<path d="M{P(ex - .08, -1.52)} Q{P(ex, -1.6)} {P(ex + .08, -1.52)} Q{P(ex, -1.47)} {P(ex - .08, -1.52)}Z" fill="{dark}"/>'
-                   f'<circle cx="{f(x + (ex + .02*sd)*s)}" cy="{f(y - 1.535*s)}" r="{f(.016*s)}" fill="#fbf4e4"/>'
+        out.append(f'<path d="M{P(ex - sd*.09, -1.56)} Q{P(ex, -1.6)} {P(ex + sd*.09, -1.5)} Q{P(ex, -1.47)} {P(ex - sd*.09, -1.56)}Z" fill="{dark}"/>'
+                   f'<path d="M{P(ex - sd*.065, -1.55)} Q{P(ex, -1.575)} {P(ex + sd*.065, -1.51)} Q{P(ex, -1.49)} {P(ex - sd*.065, -1.55)}Z" fill="#9fcf8a"/>'
+                   f'<ellipse cx="{f(x + ex*s)}" cy="{f(y - 1.535*s)}" rx="{f(.012*s)}" ry="{f(.03*s)}" fill="{dark}"/>'
+                   f'<path d="M{P(sd*.04, -1.6)} L{P(sd*.24, -1.66)}" stroke="{dark}" stroke-width="{f(.03*s)}" stroke-linecap="round"/>'
                    f'<path d="M{P(ex + sd*.06, -1.49)} Q{P(ex + sd*.14, -1.42)} {P(ex + sd*.2, -1.3)}" stroke="{dark}" stroke-width="{f(.014*s)}" fill="none"/>'
                    f'<ellipse cx="{f(x + sd*.06*s)}" cy="{f(y - 1.33*s)}" rx="{f(.075*s)}" ry="{f(.055*s)}" fill="#fbf4e4"/>')
     out.append(f'<path d="M{P(-.05,-1.42)} L{P(.05,-1.42)} L{P(0,-1.37)}Z" fill="{dark}"/>'
@@ -526,7 +530,7 @@ def p12():
     d = K.hill(p, mid, "#a9502a", "#7e3a22", depth=260)
     autumn = [("#8e3f22", "#c96a2b", "#eaa23e"), ("#9a4a1f", "#dc8a2f", "#f3c44e"), ("#7a3520", "#b8552a", "#e0873a"),
               ("#6e4a1a", "#b98a2a", "#e8c45a"), ("#5a3a1c", "#8f6a2a", "#c9a24a")]
-    K.crowns(p, mid, 150, 2600, autumn, 4.2, seed=72, clip_d=d)
+    K.canopy(p, mid, 170, autumn, 10, seed=72, clip_d=d)
     for gx in (140, 420, 610, 880):
         p.add(K.tree_row(mid, gx - 40, gx + 40, 14, lambda x, y, r: K.spruce(x, y + r.uniform(40, 110), r.uniform(40, 62), NAVY, NAVY2, NAVY3, seed=int(x)), rnd))
     meadow = R(940, [(250, 110, 260), (800, 60, 240)], 73)

@@ -579,3 +579,45 @@ def haystack(x, y, s, lit, mid, dark, straw, pole, seed=0, shadow=None, lit_side
         out.append(dab(xx, yy, s * rnd.uniform(.06, .14), s * rnd.uniform(.012, .022), a, col, .8))
     out.append(f'<path d="M{f(x - w*1.1)},{f(y - s*.08)} Q{f(x)},{f(y + s*.02)} {f(x + w*1.1)},{f(y - s*.08)} L{f(x + w)},{f(y + 2)} H{f(x - w)}Z" fill="{dark}" opacity=".7"/></g>')
     return "".join(out)
+
+
+def canopy(p, pts, depth, palettes, size, seed=0, span=None, clip_d=None, rows=None):
+    """Súvislá korunová strecha lesa: rady hrbolčekov bez medzier, farebné škvrny ako v skutočnej bučine."""
+    rnd = random.Random(seed)
+    x0, x1 = span or (pts[0][0], pts[-1][0])
+    rows = rows or max(3, int(depth / (size * 1.1)))
+    out = []
+    ph1, ph2 = rnd.uniform(0, 6), rnd.uniform(0, 6)
+
+    def pal(x, y):  # farebné zóny podľa polohy, nie náhodne po korunách
+        v = math.sin(x / 70 + ph1) + math.sin(y / 23 + x / 130 + ph2) + rnd.uniform(-.5, .5)
+        return palettes[int((v + 2.5) / 5 * len(palettes)) % len(palettes)]
+
+    for r_i in range(rows):
+        off = r_i * depth / rows
+        sc = 1 + r_i / rows * .8
+        bumps = []
+        x = x0 - size
+        while x < x1 + size:
+            rr = size * sc * rnd.uniform(.7, 1.25)
+            bumps.append((x, y_at(pts, min(max(x, pts[0][0]), pts[-1][0])) + off + rnd.uniform(-rr*.35, rr*.35), rr))
+            x += rr * rnd.uniform(1.0, 1.5)
+        base_col = pal(x0, off)[0]
+        top = [(bx, by - br * .2) for bx, by, br in bumps]
+        band = top + [(bumps[-1][0], bumps[-1][1] + depth / rows * 2.2), (bumps[0][0], bumps[0][1] + depth / rows * 2.2)]
+        out.append(f'<path d="{poly(band)}" fill="{base_col}"/>')
+        for bx, by, br in bumps:
+            c = pal(bx, by)
+            out.append(f'<ellipse cx="{f(bx)}" cy="{f(by)}" rx="{f(br*1.05)}" ry="{f(br*.95)}" fill="{c[0]}"/>')
+            out.append(f'<path d="M{f(bx - br*.9)},{f(by + br*.1)} Q{f(bx - br*.85)},{f(by - br*.85)} {f(bx + br*.1)},{f(by - br*.9)} '
+                       f'Q{f(bx - br*.1)},{f(by - br*.3)} {f(bx - br*.2)},{f(by + br*.2)}Z" fill="{c[1]}"/>')
+            if rnd.random() < .55:
+                out.append(K_dab(bx - br*.45, by - br*.45, br*.55, br*.28, -.6, c[2]))
+    g = "".join(out)
+    if clip_d:
+        g = f'<g clip-path="url(#{clip(p, clip_d)})">{g}</g>'
+    p.add(g)
+
+
+def K_dab(x, y, L, w, a, col):
+    return dab(x, y, L, w, a, col, .9)

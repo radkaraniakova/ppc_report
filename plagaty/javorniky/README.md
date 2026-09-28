@@ -60,7 +60,10 @@ nadpis dole + podtitul, pečiatka vpravo dole (miesto pre tvoje logo).
 | 11 | **Noc na hrebeni** | hviezdy, mesiac, reťaz čeloviek po hrebeňoch — plagát pre tých, čo bežali v noci |
 | 12 | **Makyta** | jeseň, kopy sena na ostrvách, ovce, drevenica, žlto-hrdzavá bučina |
 
-Generátor: `python3 src/generate_malba.py` (zdieľa pomocné funkcie s `generate.py`).
+Generátor: `python3 src/generate_premium.py` (prepracovaná verzia) nad ilustrátorskou sadou `src/kit.py` —
+smreky vetva po vetve, buky so svetlom a tieňom, postavy s anatómiou (beh, stúpanie s palicami, radosť na vrchole),
+drevenica v 3/4 pohľade, kopy sena na ostrvách, jarabina, čučoriedky, papraď, maliarske oblaky, lúče, hmla, lemové svetlo.
+Staršia jednoduchšia verzia: `src/generate_malba.py`. PNG náhľady sú v 1,5× rozlíšení.
 Písmo nadpisov: Jost (Google Fonts, OFL).
 
 **Poznámky:** Nadpis „Noc na hrebeni“ nesie parametre J100 (105 km · +4030 m), ale nie názov
